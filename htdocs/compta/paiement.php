@@ -254,17 +254,7 @@ if (empty($reshook))
 	    $paiement->paiementid   = dol_getIdFromCode($db,GETPOST('paiementcode'),'c_paiement');
 	    $paiement->num_paiement = GETPOST('num_paiement');
 	    $paiement->note         = GETPOST('comment');
-
-	    if (! $error)
-	    {
-	    	$paiement_id = $paiement->create($user, (GETPOST('closepaidinvoices')=='on'?1:0));    // This include closing invoices
-	    	if ($paiement_id < 0)
-	        {
-	            setEventMessages($paiement->error, $paiement->errors, 'errors');
-	            $error++;
-	        }
-	    }
-
+		
 	    if (! $error)
 	    {
 	    	$label='(CustomerInvoicePayment)';
@@ -276,6 +266,16 @@ if (empty($reshook))
 	            $error++;
 	        }
 	    }
+		
+	   if (! $error)
+	    {
+	    	$paiement_id = $paiement->create($user, (GETPOST('closepaidinvoices')=='on'?1:0));    // This include closing invoices
+	    	if ($paiement_id < 0)
+	        {
+	            setEventMessages($paiement->error, $paiement->errors, 'errors');
+	            $error++;
+	        }
+	    }	
 
 	    if (! $error)
 	    {
