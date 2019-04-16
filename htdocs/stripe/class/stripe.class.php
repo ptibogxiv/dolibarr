@@ -77,10 +77,11 @@ class Stripe extends CommonObject
 	/**
 	 * Return main company OAuth Connect stripe account
 	 *
-	 * @param 	string	$mode		'StripeTest' or 'StripeLive'
+	 * @param string	$mode		'StripeTest' or 'StripeLive'
+	 * @param	int		$fk_soc		Id of thirdparty
 	 * @return 	string				Stripe account 'acc_....' or '' if no OAuth token found
 	 */
-	public function getStripeAccount($mode = 'StripeTest')
+	public function getStripeAccount($mode = 'StripeTest', $fk_soc = null)
 	{
 		global $conf;
 
@@ -88,6 +89,11 @@ class Stripe extends CommonObject
 		$sql.= " FROM ".MAIN_DB_PREFIX."oauth_token";
 		$sql.= " WHERE entity = ".$conf->entity;
 		$sql.= " AND service = '".$mode."'";
+        if ($fk_soc) {
+ 		$sql.= " AND fk_soc = '".$fk_soc."'";  
+        }
+        else { $sql.= " AND ISNULL(fk_soc)"; }
+    $sql.= " AND ISNULL(fk_user) AND ISNULL(fk_adherent)";
 
 		dol_syslog(get_class($this) . "::fetch", LOG_DEBUG);
 		$result = $this->db->query($sql);
@@ -318,8 +324,8 @@ class Stripe extends CommonObject
 					"amount" => $stripeamount,
 					"currency" => $object->multicurrency_code,
                     "customer"  => $customer,
-                    "payment_method_types" => ["card"],
-                    "statement_descriptor" => dol_trunc($description, 10, 'right', 'UTF-8', 1),     // 22 chars that appears on bank receipt
+                    "allowed_source_types" => ["card"],
+                    "statement_descriptor" => dol_trunc(dol_trunc(dol_string_unaccent($mysoc->name), 8, 'right', 'UTF-8', 1).' '.$description, 22, 'right', 'UTF-8', 1),     // 22 chars that appears on bank receipt
 					"metadata" => array('dol_type'=>$object->element, 'dol_id'=>$object->id, 'dol_version'=>DOL_VERSION, 'dol_entity'=>$conf->entity, 'ipaddress'=>(empty($_SERVER['REMOTE_ADDR'])?'':$_SERVER['REMOTE_ADDR']))
 				);
 
