@@ -1551,21 +1551,9 @@ class Societe extends CommonObject
 					$error++;
 					$this->errors[] = $this->db->lasterror();
 				}
-			} 			
-      
-      // Remove third party account
-			if (! $error)
-			{
-				$sql = "DELETE FROM ".MAIN_DB_PREFIX."societe_account";
-				$sql.= " WHERE fk_soc = " . $id;
-				if (! $this->db->query($sql))
-				{
-					$error++;
-					$this->errors[] = $this->db->lasterror();
-				}
 			}
 
-			// Remove third party  TODO trigger for external action linked to these accounts
+			// Remove third party
 			if (! $error)
 			{
 				$sql = "DELETE FROM ".MAIN_DB_PREFIX."societe";

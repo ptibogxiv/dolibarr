@@ -34,7 +34,6 @@ $langs->loadLangs(array('admin', 'printing', 'oauth'));
 if (! $user->admin) accessforbidden();
 
 $action = GETPOST('action', 'alpha');
-$backtourl = GETPOST('backtourl', 'alpha');
 $mode = GETPOST('mode', 'alpha');
 $value = GETPOST('value', 'alpha');
 $varname = GETPOST('varname', 'alpha');
@@ -151,14 +150,14 @@ if ($mode == 'setup' && $user->admin)
         elseif ($key[0] == 'OAUTH_STRIPE_TEST_NAME')
         {
         	$OAUTH_SERVICENAME='StripeTest';
-        	$urltorenew=$urlwithroot.'/core/modules/oauth/stripetest_oauthcallback.php?backtourl='.urlencode(DOL_MAIN_URL_ROOT.'/admin/oauthlogintokens.php');
+        	$urltorenew=$urlwithroot.'/core/modules/oauth/stripetest_oauthcallback.php?backtourl='.urlencode(DOL_URL_ROOT.'/admin/oauthlogintokens.php');
         	$urltodelete='';
         	$urltocheckperms='';
         }
         elseif ($key[0] == 'OAUTH_STRIPE_LIVE_NAME')
         {
         	$OAUTH_SERVICENAME='StripeLive';
-        	$urltorenew=$urlwithroot.'/core/modules/oauth/stripelive_oauthcallback.php?backtourl='.urlencode(DOL_MAIN_URL_ROOT.'/admin/oauthlogintokens.php');
+        	$urltorenew=$urlwithroot.'/core/modules/oauth/stripelive_oauthcallback.php?backtourl='.urlencode(DOL_URL_ROOT.'/admin/oauthlogintokens.php');
         	$urltodelete='';
         	$urltocheckperms='';
         }
@@ -173,6 +172,7 @@ if ($mode == 'setup' && $user->admin)
         // Show value of token
         $tokenobj=null;
         // Token
+        require_once DOL_DOCUMENT_ROOT.'/includes/OAuth/bootstrap.php';
         require_once DOL_DOCUMENT_ROOT.'/includes/OAuth/bootstrap.php';
         // Dolibarr storage
         $storage = new DoliStorage($db, $conf);
