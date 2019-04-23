@@ -1,5 +1,18 @@
 # Changelog
 
+## 6.33.0 - 2019-04-22
+* [#630](https://github.com/stripe/stripe-php/pull/630) Add support for the `TaxId` resource and APIs
+
+## 6.32.1 - 2019-04-19
+* [#636](https://github.com/stripe/stripe-php/pull/636) Correct type of `$personId` in PHPDoc
+
+## 6.32.0 - 2019-04-18
+* [#621](https://github.com/stripe/stripe-php/pull/621) Add support for `CreditNote`
+
+## 6.31.5 - 2019-04-12
+* [#628](https://github.com/stripe/stripe-php/pull/628) Add constants for `person.*` event types
+* [#628](https://github.com/stripe/stripe-php/pull/628) Add missing constants for `Account` and `Person`
+
 ## 6.31.4 - 2019-04-05
 * [#624](https://github.com/stripe/stripe-php/pull/624) Fix encoding of nested parameters in multipart requests
 
