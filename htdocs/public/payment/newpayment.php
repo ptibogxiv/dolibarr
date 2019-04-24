@@ -2,8 +2,7 @@
 /* Copyright (C) 2001-2002	Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2006-2017	Laurent Destailleur		<eldy@users.sourceforge.net>
  * Copyright (C) 2009-2012	Regis Houssin			<regis.houssin@inodbox.com>
- * Copyright (C) 2018	    Juanjo Menent			<jmenent@2byte.es>
- * Copyright (C) 2019	    Thibault FOUCART		<support@ptibogxiv.net>
+ * Copyright (C) 2018	    Juanjo Menent			<jmenent@2byte.e>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -264,7 +263,7 @@ elseif (! empty($conf->global->$paramcreditor)) $creditor=$conf->global->$paramc
  * Actions
  */
 
-// Action dopayment is called after choosing the payment mode
+// Action dopayment is called after clicking/choosing the payment mode
 if ($action == 'dopayment')
 {
 	if ($paymentmethod == 'paypal')
@@ -396,7 +395,7 @@ if ($action == 'dopayment')
 }
 
 
-// Called when choosing Stripe mode, after the 'dopayment'
+// Called when choosing Stripe mode, after clicking the 'dopayment'
 if ($action == 'charge' && ! empty($conf->stripe->enabled))
 {
 	$amountstripe = $amount;
@@ -510,7 +509,7 @@ if ($action == 'charge' && ! empty($conf->stripe->enabled))
 			if (empty($vatcleaned)) $taxinfo=null;
 
 			dol_syslog("Create anonymous customer card profile", LOG_DEBUG, 0, '_stripe');
-$customer = \Stripe\Customer::create(array(
+            $customer = \Stripe\Customer::create(array(
 				'email' => $email,
 				'description' => ($email?'Anonymous customer for '.$email:'Anonymous customer'),
 				'metadata' => $metadata,
@@ -526,7 +525,7 @@ $customer = \Stripe\Customer::create(array(
 			// The customer was just created with a source, so we can make a charge
 			// with no card defined, the source just used for customer creation will be used.
 			dol_syslog("Create charge", LOG_DEBUG, 0, '_stripe');
-$charge = \Stripe\Charge::create(array(
+            $charge = \Stripe\Charge::create(array(
 				'customer' => $customer->id,
 				'amount'   => price2num($amountstripe, 'MU'),
 				'currency' => $currency,
@@ -778,7 +777,7 @@ if (! $source)
 	print '</td></tr>'."\n";
 
 	// Amount
-	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentAmount");
+	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("Amount");
 	if (empty($amount)) print ' ('.$langs->trans("ToComplete").')';
 	print '</td><td class="CTableRow'.($var?'1':'2').'">';
 	if (empty($amount) || ! is_numeric($amount))
@@ -860,7 +859,7 @@ if ($source == 'order')
 	print '</td><td class="CTableRow'.($var?'1':'2').'">'.$text;
 	print '<input type="hidden" name="s" value="'.dol_escape_htmltag($source).'">';
 	print '<input type="hidden" name="ref" value="'.dol_escape_htmltag($order->ref).'">';
-    print '<input type="hidden" name="dol_id" value="'.dol_escape_htmltag($order->id).'">';
+  	print '<input type="hidden" name="dol_id" value="'.dol_escape_htmltag($order->id).'">';
 	$directdownloadlink = $order->getLastMainDocLink('commande');
 	if ($directdownloadlink)
 	{
@@ -871,7 +870,7 @@ if ($source == 'order')
 	print '</td></tr>'."\n";
 
 	// Amount
-	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentAmount");
+	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("Amount");
 	if (empty($amount)) print ' ('.$langs->trans("ToComplete").')';
 	print '</td><td class="CTableRow'.($var?'1':'2').'">';
 	if (empty($amount) || ! is_numeric($amount))
@@ -895,29 +894,6 @@ if ($source == 'order')
 	print '<input type="hidden" name="tag" value="'.$tag.'">';
 	print '<input type="hidden" name="fulltag" value="'.$fulltag.'">';
 	print '</td></tr>'."\n";
-  
-    if (! empty($conf->stripe->enabled) && empty($order->billed) && ($paymentmethod == 'stripe') ) {
-    require_once DOL_DOCUMENT_ROOT.'/stripe/class/stripe.class.php';	
-    
-    $service = 'StripeLive';
-	$servicestatus = 1;
-  
-	if (empty($conf->global->STRIPE_LIVE) || GETPOST('forcesandbox', 'alpha'))
-	{
-	$service = 'StripeTest';
-	$servicestatus = 0;
-	}
-
-    $stripe = new Stripe($db);
-    $stripeacc = $stripe->getStripeAccount($service);
-    $stripecu = $stripe->customerStripe($order->thirdparty, $stripeacc, $servicestatus, 1);
-	//  for dev only
-	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentIntent");
-	print '</td><td class="CTableRow'.($var?'1':'2').'">';
-    $paymentintent=$stripe->getPaymentIntent($object, $stripecu, $stripeacc, $servicestatus);
-    print '<b>'.$paymentintent->id.'</b>';
-	print '</td></tr>'."\n";
-}
 
 	// Shipping address
 	$shipToName=$order->thirdparty->name;
@@ -928,7 +904,8 @@ if ($source == 'order')
 	$shipToZip=$order->thirdparty->zip;
 	$shipToStreet2='';
 	$phoneNum=$order->thirdparty->phone;
-	if ($shipToName && $shipToStreet && $shipToCity && $shipToCountryCode && $shipToZip) {
+	if ($shipToName && $shipToStreet && $shipToCity && $shipToCountryCode && $shipToZip)
+	{
 		print '<input type="hidden" name="shipToName" value="'.$shipToName.'">'."\n";
 		print '<input type="hidden" name="shipToStreet" value="'.$shipToStreet.'">'."\n";
 		print '<input type="hidden" name="shipToCity" value="'.$shipToCity.'">'."\n";
@@ -1029,14 +1006,14 @@ if ($source == 'invoice')
 			print '<input type="hidden" name="amount" value="'.$amount.'">';
 			print '<input type="hidden" name="newamount" value="'.$amount.'">';
 		}
+		// Currency
+		print ' <b>'.$langs->trans("Currency".$currency).'</b>';
+		print '<input type="hidden" name="currency" value="'.$currency.'">';
 	}
 	else
 	{
-		print '<b>'.price($object->total_ttc, 1, $langs).'</b>';
+		print price($object->total_ttc, 1, $langs);
 	}
-	// Currency
-	print ' <b>'.$langs->trans("Currency".$currency).'</b>';
-	print '<input type="hidden" name="currency" value="'.$currency.'">';
 	print '</td></tr>'."\n";
 
 	// Tag
@@ -1045,30 +1022,6 @@ if ($source == 'invoice')
 	print '<input type="hidden" name="tag" value="'.$tag.'">';
 	print '<input type="hidden" name="fulltag" value="'.$fulltag.'">';
 	print '</td></tr>'."\n";
-  
-  if (! empty($conf->stripe->enabled) && empty($object->paye) && ($paymentmethod == 'stripe') ) 
-  {
-    require_once DOL_DOCUMENT_ROOT.'/stripe/class/stripe.class.php';	
-    
-    $service = 'StripeLive';
-    $servicestatus = 1;
-
-    if (empty($conf->global->STRIPE_LIVE) || GETPOST('forcesandbox', 'alpha'))
-    {
-    $service = 'StripeTest';
-    $servicestatus = 0;
-    }
-
-    $stripe = new Stripe($db);
-    $stripeacc = $stripe->getStripeAccount($service);
-    $stripecu = $stripe->customerStripe($invoice->thirdparty, $stripeacc, $servicestatus, 1);
-    //  for dev only
-    print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentIntent");
-    print '</td><td class="CTableRow'.($var?'1':'2').'">';
-    $paymentintent=$stripe->getPaymentIntent($object, $stripecu, $stripeacc, $servicestatus);
-    print '<b>'.$paymentintent->id.'</b>';
-    print '</td></tr>'."\n";
-  }
 
 	// Shipping address
 	$shipToName=$invoice->thirdparty->name;
@@ -1195,7 +1148,6 @@ if ($source == 'contractline')
 	// Debitor
 	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("ThirdParty");
 	print '</td><td class="CTableRow'.($var?'1':'2').'"><b>'.$contract->thirdparty->name.'</b>';
-	print '</td></tr>'."\n";
 
 	// Object
 	$text='<b>'.$langs->trans("PaymentRenewContractId", $contract->ref, $contractline->ref).'</b>';
@@ -1256,7 +1208,7 @@ if ($source == 'contractline')
 	print '</b></td></tr>'."\n";
 
 	// Amount
-	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentAmount");
+	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("Amount");
 	if (empty($amount)) print ' ('.$langs->trans("ToComplete").')';
 	print '</td><td class="CTableRow'.($var?'1':'2').'">';
 	if (empty($amount) || ! is_numeric($amount))
@@ -1379,11 +1331,13 @@ if ($source == 'membersubscription')
 	if ($member->last_subscription_date || $member->last_subscription_amount)
 	{
 		// Last subscription date
+
 		print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("LastSubscriptionDate");
 		print '</td><td class="CTableRow'.($var?'1':'2').'">'.dol_print_date($member->last_subscription_date, 'day');
 		print '</td></tr>'."\n";
 
 		// Last subscription amount
+
 		print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("LastSubscriptionAmount");
 		print '</td><td class="CTableRow'.($var?'1':'2').'">'.price($member->last_subscription_amount);
 		print '</td></tr>'."\n";
@@ -1392,7 +1346,7 @@ if ($source == 'membersubscription')
 	}
 
 	// Amount
-	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentAmount");
+	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("Amount");
 	if (empty($amount))
 	{
 		if (empty($conf->global->MEMBER_NEWFORM_AMOUNT)) print ' ('.$langs->trans("ToComplete");
@@ -1533,7 +1487,7 @@ if ($source == 'donation')
 	print '</td></tr>'."\n";
 
 	// Amount
-	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentAmount");
+	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("Amount");
 	if (empty($amount))
 	{
 		if (empty($conf->global->MEMBER_NEWFORM_AMOUNT)) print ' ('.$langs->trans("ToComplete");
@@ -1585,29 +1539,6 @@ if ($source == 'donation')
 	print '<input type="hidden" name="tag" value="'.$tag.'">';
 	print '<input type="hidden" name="fulltag" value="'.$fulltag.'">';
 	print '</td></tr>'."\n";
-    
-    if (! empty($conf->stripe->enabled) && empty($object->paid) && ($paymentmethod == 'stripe') ) {
-    require_once DOL_DOCUMENT_ROOT.'/stripe/class/stripe.class.php';	
-    
-    $service = 'StripeLive';
-	$servicestatus = 1;
-  
-	if (empty($conf->global->STRIPE_LIVE) || GETPOST('forcesandbox', 'alpha'))
-	{
-	$service = 'StripeTest';
-	$servicestatus = 0;
-	}
-
-    $stripe = new Stripe($db);
-    $stripeacc = $stripe->getStripeAccount($service);
-    $stripecu = $stripe->customerStripe($don->thirdparty, $stripeacc, $servicestatus, 1);
-	//  for dev only
-	print '<tr class="CTableRow'.($var?'1':'2').'"><td class="CTableRow'.($var?'1':'2').'">'.$langs->trans("PaymentIntent");
-	print '</td><td class="CTableRow'.($var?'1':'2').'">';
-    $paymentintent=$stripe->getPaymentIntent($object, $stripecu, $stripeacc, $servicestatus);
-    print '<b>'.$paymentintent->id.'</b>';
-	print '</td></tr>'."\n";
-    }
 
 	// Shipping address
 	$shipToName=$don->getFullName($langs);
@@ -1727,7 +1658,7 @@ print '<br>';
 if (preg_match('/^dopayment/', $action))
 {
 
-	// Strip
+	// Stripe
 	if (GETPOST('dopayment_stripe', 'alpha'))
 	{
 		// Simple checkout
@@ -1769,11 +1700,12 @@ if (preg_match('/^dopayment/', $action))
 	        background-color: #fefde5 !important;
 	    }
 	    </style>';
-        
-        if ($paymentmethod != 'stripe')
-        {
-		print '<br><form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="payment-form">';
-        }
+
+		print '
+
+	    <br>
+	    <form action="'.$_SERVER['REQUEST_URI'].'" method="POST" id="payment-form">';
+
 		print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">'."\n";
 		print '<input type="hidden" name="dopayment_stripe" value="1">'."\n";
 		print '<input type="hidden" name="action" value="charge">'."\n";
@@ -1790,34 +1722,33 @@ if (preg_match('/^dopayment/', $action))
 		print '<input type="hidden" name="email" value="'.GETPOST('email', 'alpha').'" />';
 		print '<input type="hidden" name="thirdparty_id" value="'.GETPOST('thirdparty_id', 'int').'" />';
 
-		print '<table id="dolpaymenttable" summary="Payment form" class="center">
+		print '
+	    <table id="dolpaymenttable" summary="Payment form" class="center">
 	    <tbody><tr><td class="textpublicpayment">
-        <div id="payment-request-button"><!-- A Stripe Element will be inserted here. --></div>
+
 	    <div class="form-row left">
-	    <label for="card-element">
-	    '.$langs->trans("CreditOrDebitCard").'
-	    </label><br>
-        <input id="cardholder-name" name="cardholder-name" value="" type="text" placeholder="'.$langs->trans("CardOwner").'" autocomplete="off" required>
-        <br><div id="card-element">
+
+	    <label for="card-element">'.$langs->trans("CreditOrDebitCard").'</label>
+	    <div id="card-element">
 	    <!-- a Stripe Element will be inserted here. -->
 	    </div>
+
 	    <!-- Used to display form errors -->
 	    <div id="card-errors" role="alert"></div>
-	    </div>
-	    <br>
-	    <button class="butAction" id="buttontopay" data-secret="'.$paymentintent->client_secret.'">'.$langs->trans("ValidatePayment").'</button>
-	    <img id="hourglasstopay" class="hidden" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/working.gif'.'">
-	    </td></tr></tbody></table>';
-        if ($paymentmethod != 'stripe')
-        {
-	        print '</form>';
-        }
-        else
-        {
-	        print '<script src="https://js.stripe.com/v3/"></script>';
-        }
-	    print '<script type="text/javascript" language="javascript">';
 
+	    </div>
+
+	    <br>
+	    <button class="butAction" id="buttontopay">'.$langs->trans("ValidatePayment").'</button>
+	    <img id="hourglasstopay" class="hidden" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/working.gif'.'">
+	    </td></tr></tbody></table>
+
+	    </form>'."\n";
+
+		print '<script src="https://js.stripe.com/v3/"></script>'."\n";
+
+	    // Code to ask the credit card. This use the default "API version". No way to force API version when using JS code.
+		print '<script type="text/javascript" language="javascript">'."\n";
 		?>
 
 	    // Create a Stripe client.
@@ -1846,14 +1777,13 @@ if (preg_match('/^dopayment/', $action))
 	    };
 
 	    // Create an instance of the card Element
-	    var cardElement = elements.create('card', {style: style});
-        var cardholderName = document.getElementById('cardholder-name');
-      
+	    var card = elements.create('card', {style: style});
+
 	    // Add an instance of the card Element into the `card-element` <div>
-	    cardElement.mount('#card-element');
+	    card.mount('#card-element');
 
 	    // Handle real-time validation errors from the card Element.
-	    cardElement.addEventListener('change', function(event) {
+	    card.addEventListener('change', function(event) {
 	      var displayError = document.getElementById('card-errors');
 	      if (event.error) {
 	        displayError.textContent = event.error.message;
@@ -1861,36 +1791,83 @@ if (preg_match('/^dopayment/', $action))
 	        displayError.textContent = '';
 	      }
 	    });
-      
-	    // Handle form submission
-var cardButton = document.getElementById('buttontopay');
-var clientSecret = cardButton.dataset.secret;
 
-cardButton.addEventListener('click', function(event) {
-  stripe.handleCardPayment(
-    clientSecret, cardElement, {
-      source_data: {
-        owner: {
-          name: cardholderName.value,
-        }
-      }
-    }
-  ).then(function(result) {
-	      jQuery('#buttontopay').hide();
-	      jQuery('#hourglasstopay').show();  
+	    // Handle form submission
+	    var form = document.getElementById('payment-form');
+	    console.log(form);
+	    form.addEventListener('submit', function(event) {
+	      event.preventDefault();
+			<?php
+			if (empty($conf->global->STRIPE_USE_3DSECURE))	// Ask credit card directly, no 3DS test
+			{
+			?>
+				/* Use token */
+				stripe.createToken(card).then(function(result) {
 			        if (result.error) {
-	      jQuery('#buttontopay').show();
-	      jQuery('#hourglasstopay').hide();              
 			          // Inform the user if there was an error
 			          var errorElement = document.getElementById('card-errors');
 			          errorElement.textContent = result.error.message;
 			        } else {
+			          // Send the token to your server
+			          stripeTokenHandler(result.token);
+			        }
+				});
+			<?php
+			}
+			else											// Ask credit card with 3DS test
+			{
+			?>
+				/* Use 3DS source */
+				stripe.createSource(card).then(function(result) {
+				    if (result.error) {
+				      // Inform the user if there was an error
+				      var errorElement = document.getElementById('card-errors');
+				      errorElement.textContent = result.error.message;
+				    } else {
+				      // Send the source to your server
+				      stripeSourceHandler(result.source);
+				    }
+				});
+			<?php
+			}
+			?>
+	    });
+
+
+		/* Insert the Token into the form so it gets submitted to the server */
+	    function stripeTokenHandler(token) {
+	      // Insert the token ID into the form so it gets submitted to the server
+	      var form = document.getElementById('payment-form');
+	      var hiddenInput = document.createElement('input');
+	      hiddenInput.setAttribute('type', 'hidden');
+	      hiddenInput.setAttribute('name', 'stripeToken');
+	      hiddenInput.setAttribute('value', token.id);
+	      form.appendChild(hiddenInput);
+
 	      // Submit the form
 	      jQuery('#buttontopay').hide();
 	      jQuery('#hourglasstopay').show();
-			        }
-  });
-});
+	      console.log("submit token");
+	      form.submit();
+	    }
+
+		/* Insert the Source into the form so it gets submitted to the server */
+		function stripeSourceHandler(source) {
+		  // Insert the source ID into the form so it gets submitted to the server
+		  var form = document.getElementById('payment-form');
+		  var hiddenInput = document.createElement('input');
+		  hiddenInput.setAttribute('type', 'hidden');
+		  hiddenInput.setAttribute('name', 'stripeSource');
+		  hiddenInput.setAttribute('value', source.id);
+		  form.appendChild(hiddenInput);
+
+		  // Submit the form
+	      jQuery('#buttontopay').hide();
+	      jQuery('#hourglasstopay').show();
+	      console.log("submit source");
+		  form.submit();
+		}
+
 
 	    <?php
 		print '</script>';
