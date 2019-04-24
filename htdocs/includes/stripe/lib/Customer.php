@@ -8,6 +8,7 @@ namespace Stripe;
  * @property string $id
  * @property string $object
  * @property int $account_balance
+ * @property mixed $address
  * @property string $created
  * @property string $currency
  * @property string $default_source
@@ -19,11 +20,13 @@ namespace Stripe;
  * @property mixed $invoice_settings
  * @property bool $livemode
  * @property StripeObject $metadata
+ * @property string $name
+ * @property string $phone
+ * @property string[] preferred_locales
  * @property mixed $shipping
  * @property Collection $sources
  * @property Collection $subscriptions
- * @property mixed $tax_info
- * @property mixed $tax_info_verification
+ * @property Collection $tax_ids
  *
  * @package Stripe
  */
@@ -38,6 +41,14 @@ class Customer extends ApiResource
     use ApiOperations\NestedResource;
     use ApiOperations\Retrieve;
     use ApiOperations\Update;
+
+    /**
+     * Possible string representations of the customer's type of tax exemption.
+     * @link https://stripe.com/docs/api/customers/object#customer_object-tax_exempt
+     */
+    const TAX_EXEMPT_NONE    = 'none';
+    const TAX_EXEMPT_EXEMPT  = 'exempt';
+    const TAX_EXEMPT_REVERSE = 'reverse';
 
     public static function getSavedNestedResources()
     {
