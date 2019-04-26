@@ -295,6 +295,12 @@ elseif ($event->type == 'customer.deleted') {
     $db->query($sql);
     $db->commit();
 }
+elseif ($event->type == 'payment_intent.succeeded') {
+    // TODO: Redirect to paymentok.php
+}
+elseif ($event->type == 'payment_intent.payment_failed') {
+    // TODO: Redirect to paymentko.php
+}
 elseif ($event->type == 'charge.succeeded') {
     // TODO: create fees
     // TODO: Redirect to paymentok.php
@@ -309,7 +315,6 @@ elseif (($event->type == 'source.chargeable') && ($event->data->object->type == 
     // Save into $tmptag all metadata
 	$tmptag=dolExplodeIntoArray($fulltag, '.', '=');
 
-	// TODO: Set $_POST var from $event->data and call newpayment.php with $action = 'charge'
     $stripe=new Stripe($db);
     /*
     $stripeacc = $stripe->getStripeAccount($service);								// Stripe OAuth connect account of dolibarr user (no network access here)
