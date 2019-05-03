@@ -183,13 +183,14 @@ class AdherentType extends CommonObject
 		$error=0;
 
 		$this->label=trim($this->label);
+
 		$this->db->begin();
 
 		$sql = "UPDATE ".MAIN_DB_PREFIX."adherent_type ";
 		$sql.= "SET ";
 		$sql.= "statut = ".$this->statut.",";
-		$sql.= "libelle = '".$this->db->escape($this->label)."',";
-    $sql.= "morphy = '".$this->db->escape($this->morphy)."',";
+		$sql.= "libelle = '".$this->db->escape($this->label) ."',";
+        $sql.= "morphy = '".$this->db->escape($this->morphy) ."',";
 		$sql.= "subscription = '".$this->db->escape($this->subscription)."',";
 		$sql.= "note = '".$this->db->escape($this->note)."',";
 		$sql.= "vote = ".(integer) $this->db->escape($this->vote).",";
