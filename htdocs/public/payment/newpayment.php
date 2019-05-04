@@ -2,7 +2,8 @@
 /* Copyright (C) 2001-2002	Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2006-2017	Laurent Destailleur		<eldy@users.sourceforge.net>
  * Copyright (C) 2009-2012	Regis Houssin			<regis.houssin@inodbox.com>
- * Copyright (C) 2018	    Juanjo Menent			<jmenent@2byte.e>
+ * Copyright (C) 2018	    Juanjo Menent			<jmenent@2byte.es>
+ * Copyright (C) 2018-2019	Thibault FOUCART	    <support@ptibogxiv.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2012,9 +2013,7 @@ if (preg_match('/^dopayment/', $action))
     			        	    city: '<?php echo $object->thirdparty->town; ?>',
     			        	    country: '<?php echo $object->thirdparty->country_code; ?>',
     			        	    line1: '<?php echo $object->thirdparty->address; ?>',
-    			        	    postal_code: '<?php echo $object->thirdparty->zip; ?>'
-                    }
-                    <?php } ?>
+    			        	    postal_code: '<?php echo $object->thirdparty->zip; ?>'}<?php } ?>
     			        }	/* TODO Add all other known data like emails, ... to be SCA compliant */
           			},
           			save_payment_method: false
