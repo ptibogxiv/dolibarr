@@ -239,10 +239,10 @@ class Stripe extends CommonObject
 	}
   
 	/**
-	 * Get the Stripe payment method of a thirdparty (with option to create it if not linked yet)
+	 * Get the Stripe payment method of a thirdparty
 	 *
-	 * @param	Societe	$object							Object thirdparty to check, or create on stripe (create on stripe also update the stripe_account table for current entity)
-	 * @param	string	$paymentmethod	    ID of Payment Method
+	 * @param	Societe	$object							Object thirdparty tocheck
+	 * @param	string	$paymentmethod	    Payment Method
 	 * @param	string	$key							''=Use common API. If not '', it is the Stripe connect account 'acc_....' to use Stripe connect
 	 * @param	int		$status							Status (0=test, 1=live)
 	 * @return 	\Stripe\PaymentMethod|null 			Stripe PaymentMethod or null if not found
@@ -263,9 +263,9 @@ class Stripe extends CommonObject
 					\Stripe\Stripe::setApiKey($stripearrayofkeysbyenv[$status]['secret_key']);
 
 					if (empty($key)) {				// If the Stripe connect account not set, we use common API usage
-						$stripepaymentmethod = \Stripe\PaymentMethod::retrieve($paymentmethod->id);
+						$stripepaymentmethod = \Stripe\PaymentMethod::retrieve(''.$paymentmethod->id.'');
 					} else {
-						$stripepaymentmethod = \Stripe\PaymentMethod::retrieve($paymentmethod->id, array("stripe_account" => $key));
+						$stripepaymentmethod = \Stripe\PaymentMethod::retrieve(''.$paymentmethod->id.'', array("stripe_account" => $key));
 					}
 
 				}
@@ -275,7 +275,47 @@ class Stripe extends CommonObject
 				}
 
 		return $stripepaymentmethod;
-	}  
+	}
+  
+	/**
+	 * Get list payment method of a thirdparty // TODO convert to request all payment methods stripe and offline then move in other class.php
+	 *
+	 * @param	Societe	$object							Object thirdparty to check
+	 * @param	string 	$customer							Stripe customer ref 'cus_xxxxxxxxxxxxx' via customerStripe()
+	 * @param	string 	$type							Payment methods type
+	 * @param	string	$key							''=Use common API. If not '', it is the Stripe connect account 'acc_....' to use Stripe connect
+	 * @param	int		$status							Status (0=test, 1=live)
+	 * @return 	\Stripe\PaymentMethod|null 			Stripe PaymentMethod or null if not found
+	 */
+	public function getListOfPaymentMethods(Societe $object, $customer = null, $type = 'card', $key = '', $status = 0)
+	{
+		global $conf, $user;
+
+		if (empty($object->id))
+		{
+			dol_syslog("customerStripe is called with the parameter object that is not loaded");
+			return null;
+		}
+
+				try {
+					// Force to use the correct API key
+					global $stripearrayofkeysbyenv;
+					\Stripe\Stripe::setApiKey($stripearrayofkeysbyenv[$status]['secret_key']);
+
+					if (empty($key)) {				// If the Stripe connect account not set, we use common API usage
+						$paymentmethods = \Stripe\PaymentMethod::all(["customer" => $customer->id, "type" => $type]);
+					} else {
+						$paymentmethods = \Stripe\PaymentMethod::retrieve(''.$paymentmethod->id.'', array("stripe_account" => $key));
+					}
+
+				}
+				catch(Exception $e)
+				{
+					$this->error = $e->getMessage();
+				}
+
+		return $paymentmethods->data;
+	}    
 
     /**
 	 * Get the Stripe payment intent. Create it with confirm=false
@@ -371,11 +411,11 @@ class Stripe extends CommonObject
     		    "confirm" => $confirmnow,	// Do not confirm immediatly during creation of intent
     		    "confirmation_method" => $mode,
     		    "amount" => $stripeamount,
-    			"currency" => $currency_code,
+            "currency" => $currency_code,
     		    "payment_method_types" => ["card"],
     		    "description" => $description,
     		    "statement_descriptor" => dol_trunc($tag, 10, 'right', 'UTF-8', 1),     // 22 chars that appears on bank receipt (company + description)
-    			"metadata" => $metadata
+            "metadata" => $metadata
     		);
     		if (! is_null($customer)) $dataforintent["customer"]=$customer;
     		// save_payment_method = true,

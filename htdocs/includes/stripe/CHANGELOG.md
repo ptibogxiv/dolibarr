@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.34.5 - 2019-05-06
+* [#647](https://github.com/stripe/stripe-php/pull/647) Set the return type to static for more operations
+
+## 6.34.4 - 2019-05-06
+* [#650](https://github.com/stripe/stripe-php/pull/650) Add missing constants for Event types
+
 ## 6.34.3 - 2019-05-01
 * [#644](https://github.com/stripe/stripe-php/pull/644) Update return type to `static` to improve static analysis
 * [#645](https://github.com/stripe/stripe-php/pull/645) Fix constant for `payment_intent.payment_failed`

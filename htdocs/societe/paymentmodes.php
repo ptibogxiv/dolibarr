@@ -831,7 +831,7 @@ if ($socid && $action != 'edit' && $action != 'create' && $action != 'editcard' 
 			try {
 				$customerstripe=$stripe->customerStripe($object, $stripeacc, $servicestatus);
 				if ($customerstripe->id) {
-					$listofpaymentmethods=\Stripe\PaymentMethod::all(["customer" => "".$customerstripe->id."", "type" => "card"])->data;
+          $listofpaymentmethods = $stripe->getListOfPaymentMethods($object, $customerstripe, 'card', $stripeacc, $servicestatus);  
 				}
 			}
 			catch(Exception $e)
@@ -997,9 +997,6 @@ if ($socid && $action != 'edit' && $action != 'create' && $action != 'editcard' 
 				// Src ID
 				print '<td>';
 				$connect='';
-        //print \Stripe\PaymentMethod::retrieve($src->id);	
-        $stripe = new Stripe($db);
-        print $stripe->getPaymentMethodStripe($object, $src, $stripeacc, $status);
 				print $src->id;
 				if (!empty($stripeacc)) $connect=$stripeacc.'/';
 				//$url='https://dashboard.stripe.com/'.$connect.'test/sources/'.$src->id;
