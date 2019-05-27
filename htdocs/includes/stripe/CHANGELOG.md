@@ -1,5 +1,26 @@
 # Changelog
 
+## 6.37.0 - 2019-05-23
+* [#663](https://github.com/stripe/stripe-php/pull/663) Add support for `radar.early_fraud_warning` resource
+
+## 6.36.0 - 2019-05-22
+* [#661](https://github.com/stripe/stripe-php/pull/661) Add constants for new TaxId types
+* [#662](https://github.com/stripe/stripe-php/pull/662) Add constants for BalanceTransaction types
+
+## 6.35.2 - 2019-05-20
+* [#655](https://github.com/stripe/stripe-php/pull/655) Add constants for payment intent statuses
+* [#659](https://github.com/stripe/stripe-php/pull/659) Fix PHPDoc for various nested Account actions
+* [#660](https://github.com/stripe/stripe-php/pull/660) Fix various PHPDoc
+
+## 6.35.1 - 2019-05-20
+* [#658](https://github.com/stripe/stripe-php/pull/658) Use absolute value when checking timestamp tolerance
+
+## 6.35.0 - 2019-05-14
+* [#651](https://github.com/stripe/stripe-php/pull/651) Add support for the Capability resource and APIs
+
+## 6.34.6 - 2019-05-13
+* [#654](https://github.com/stripe/stripe-php/pull/654) Fix typo in definition of `Event::PAYMENT_METHOD_ATTACHED` constant
+
 ## 6.34.5 - 2019-05-06
 * [#647](https://github.com/stripe/stripe-php/pull/647) Set the return type to static for more operations
 
