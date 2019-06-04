@@ -13,7 +13,6 @@ namespace Stripe;
  * @property mixed $billing_thresholds
  * @property bool $cancel_at_period_end
  * @property int $canceled_at
- * @property string $collection_method
  * @property int $created
  * @property int $current_period_end
  * @property int $current_period_start
@@ -32,7 +31,6 @@ namespace Stripe;
  * @property int $quantity
  * @property SubscriptionSchedule $schedule
  * @property int $start
- * @property int $start_date
  * @property string $status
  * @property float $tax_percent
  * @property int $trial_end

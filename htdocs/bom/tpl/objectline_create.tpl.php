@@ -81,7 +81,7 @@ if ($nolinesbefore) {
 		print '</span></td>';
 	}
 	?>
-	<td class="linecollost right"><?php echo $langs->trans('ManufacturingEfficiency'); ?></td>
+	<td class="linecollost right"><?php echo $form->textwithpicto($langs->trans('ManufacturingEfficiency'), $langs->trans('ValueOfMeansLoss')); ?></td>
 	<td class="linecoledit" colspan="<?php echo $colspan; ?>">&nbsp;</td>
 </tr>
 <?php
@@ -107,7 +107,6 @@ if ($nolinesbefore) {
 	{
 		if ($forceall >= 0 && $freelines) echo '<br>';
 		echo '<span class="prod_entry_mode_predef">';
-
 		$filtertype='';
 		if (! empty($object->element) && $object->element == 'contrat' && empty($conf->global->CONTRACT_SUPPORT_PRODUCTS)) $filtertype='1';
 

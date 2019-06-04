@@ -2284,7 +2284,7 @@ class Facture extends CommonInvoice
 			// Controle que facture source connue
 			if ($this->fk_facture_source <= 0)
 			{
-				$this->error=$langs->trans("ErrorFieldRequired", $langs->trans("InvoiceReplacement"));
+				$this->error=$langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("InvoiceReplacement"));
 				$this->db->rollback();
 				return -10;
 			}
@@ -4602,6 +4602,7 @@ class FactureLigne extends CommonInvoiceLine
 			if ($result <= 0)
 			{
 				$this->error='ErrorProductIdDoesNotExists';
+				dol_syslog(get_class($this)."::insert Error ".$this->error, LOG_ERR);
 				return -1;
 			}
 		}
