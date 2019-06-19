@@ -105,7 +105,7 @@ if ($cancel) {
 
 if ($action == 'add' && $user->rights->adherent->configurer) {
 	$object->label			= trim($label);
-  $object->morphy         = trim($morphy);
+    $object->morphy         = trim($morphy);
 	$object->statut = (int) $statut;
 	$object->subscription = (int) $subscription;
 	$object->note			= trim($comment);
