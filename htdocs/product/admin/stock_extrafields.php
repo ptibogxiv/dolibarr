@@ -2,7 +2,6 @@
 /* Copyright (C) 2001-2002	Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2003		Jean-Louis Bergamo		<jlb@j1b.org>
  * Copyright (C) 2004-2011	Laurent Destailleur		<eldy@users.sourceforge.net>
- * Copyright (C) 2012		Marcos García			<marcosgdf@gmail.com>
  * Copyright (C) 2012		Regis Houssin			<regis.houssin@inodbox.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,17 +19,17 @@
  */
 
 /**
- *      \file       htdocs/product/admin/product_extrafields.php
- *		\ingroup    societe
+ *      \file       htdocs/product/admin/stock_extrafields.php
+ *		\ingroup    stock
  *		\brief      Page to setup extra fields of third party
  */
 
 require '../../main.inc.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/stock.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array('companies', 'admin', 'products'));
+$langs->loadLangs(array('companies', 'admin', 'stocks'));
 
 $extrafields = new ExtraFields($db);
 $form = new Form($db);
@@ -42,7 +41,7 @@ foreach ($tmptype2label as $key => $val) $type2label[$key]=$langs->transnoentiti
 
 $action=GETPOST('action', 'alpha');
 $attrname=GETPOST('attrname', 'alpha');
-$elementtype='product'; //Must be the $element of the class that manage extrafield
+$elementtype='entrepot'; //Must be the $table_element of the class that manage extrafield
 
 if (!$user->admin) accessforbidden();
 
@@ -59,31 +58,17 @@ require DOL_DOCUMENT_ROOT.'/core/actions_extrafields.inc.php';
  * View
  */
 
-$title = $langs->trans('ProductServiceSetup');
-$textobject = $langs->trans("ProductsAndServices");
-if (empty($conf->product->enabled))
-{
-	$title = $langs->trans('ServiceSetup');
-	$textobject = $langs->trans('Services');
-}
-elseif (empty($conf->service->enabled))
-{
-	$title = $langs->trans('ProductSetup');
-	$textobject = $langs->trans('Products');
-}
+$textobject=$langs->transnoentitiesnoconv("Warehouses");
 
-//$help_url='EN:Module Third Parties setup|FR:Paramétrage_du_module_Tiers';
-$help_url='';
-llxHeader('', $title, $help_url);
-
+llxHeader('', $langs->trans("StockSetup"));
 
 $linkback='<a href="'.DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1">'.$langs->trans("BackToModuleList").'</a>';
-print load_fiche_titre($title, $linkback, 'title_setup');
+print load_fiche_titre($langs->trans("StockSetup"), $linkback, 'title_setup');
 
 
-$head = product_admin_prepare_head();
+$head = stock_admin_prepare_head();
 
-dol_fiche_head($head, 'attributes', $textobject, -1, 'product');
+dol_fiche_head($head, 'attributes', $langs->trans("Warehouses"), -1, 'stock');
 
 require DOL_DOCUMENT_ROOT.'/core/tpl/admin_extrafields_view.tpl.php';
 
@@ -94,7 +79,7 @@ dol_fiche_end();
 if ($action != 'create' && $action != 'edit')
 {
     print '<div class="tabsAction">';
-    print "<a class=\"butAction\" href=\"".$_SERVER["PHP_SELF"]."?action=create#newattrib\">".$langs->trans("NewAttribute")."</a>";
+    print '<div class="inline-block divButAction"><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=create">'.$langs->trans("NewAttribute").'</a></div>';
     print "</div>";
 }
 
@@ -107,8 +92,8 @@ if ($action != 'create' && $action != 'edit')
 
 if ($action == 'create')
 {
-	print '<br><div id="newattrib"></div>';
-	print load_fiche_titre($langs->trans('NewAttribute'));
+    print "<br>";
+    print load_fiche_titre($langs->trans('NewAttribute'));
 
     require DOL_DOCUMENT_ROOT.'/core/tpl/admin_extrafields_add.tpl.php';
 }

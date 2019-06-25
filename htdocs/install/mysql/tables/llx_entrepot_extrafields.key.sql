@@ -1,5 +1,5 @@
 -- ===================================================================
--- Copyright (C) 2016 Laurent Destailleur <eldy@users.sourceforge.net>
+-- Copyright (C) 2011 Laurent Destailleur	<eldy@users.sourceforge.net>
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -16,5 +16,5 @@
 --
 -- ===================================================================
 
-ALTER TABLE llx_c_shipment_mode ADD UNIQUE INDEX uk_c_shipment_mode (code, entity);
 
+ALTER TABLE llx_entrepot_extrafields ADD INDEX idx_entrepot_extrafields (fk_object);
