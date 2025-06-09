@@ -4,7 +4,7 @@
  * Copyright (C) 2019-2024  Frédéric France         <frederic.france@free.fr>
  * Copyright (C) 2021      Juanjo Menent           <jmenent@2byte.es>
  * Copyright (C) 2021      Alexandre Spangaro      <aspangaro@open-dsi.fr>
- * Copyright (C) 2023      Charlene Benke	       <charlene.r@patas-monkey.com>
+ * Copyright (C) 2023-2025 Charlene Benke	       <charlene.r@patas-monkey.com>
  * Copyright (C) 2024		MDW							<mdeweerd@users.noreply.github.com>
  * Copyright (C) 2024	   Irvine FLEITH		   <irvine.fleith@atm-consulting.fr>
  *
@@ -572,15 +572,10 @@ class FormTicket
 
 		// Categories
 		if (isModEnabled('category') && !$public) {
-			include_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
-			$cate_arbo = $form->select_all_categories(Categorie::TYPE_TICKET, '', 'parent', 64, 0, 3);
-
-			if (count($cate_arbo)) {
-				// Categories
-				print '<tr><td class="wordbreak"></td><td>';
-				print img_picto('', 'category', 'class="pictofixedwidth"').$form->multiselectarray('categories', $cate_arbo, GETPOST('categories', 'array'), 0, 0, 'quatrevingtpercent widthcentpercentminusx', 0, 0, '', '', $langs->transnoentitiesnoconv("Categories"));
-				print "</td></tr>";
-			}
+			// Categories
+			print '<tr><td class="wordbreak"></td><td>';
+			print $form->selectCategories(Categorie::TYPE_TICKET, 'categories', $object);
+			print "</td></tr>";
 		}
 
 		// Attached files
@@ -771,7 +766,7 @@ class FormTicket
 				print '<tr><td><label for="contract"><span class="">'.$langs->trans("Contract").'</span></label></td><td>';
 				print img_picto('', 'contract', 'class="pictofixedwidth"');
 				// socid is for internal users null and not 0 or -1
-				print $formcontract->select_contract($user->socid ?? -1, GETPOSTINT('contactid'), 'contractid', 0, 1, 1, 1);
+				print $formcontract->select_contract($user->socid ?? -1, GETPOSTINT('contractid'), 'contractid', 0, 1, 1, 1);
 				print '</td></tr>';
 			}
 		}

@@ -399,7 +399,7 @@ if ((!defined('NOCSRFCHECK') && empty($dolibarr_nocsrfcheck) && getDolGlobalInt(
 		//dol_syslog("_SESSION['token']=".$sessiontokenforthisurl, LOG_DEBUG);
 		// Do not output anything on standard output because this create problems when using the BACK button on browsers. So we just set a message into session.
 		if (!defined('NOTOKENRENEWAL')) {
-			// If the page is not a page that disable the token renewal, we report a warning message to explain token has epired.
+			// If the page is not a page that disable the token renewal, we report a warning message to explain token has expired.
 			setEventMessages('SecurityTokenHasExpiredSoActionHasBeenCanceledPleaseRetry', null, 'warnings', '', 1);
 		}
 		$savid = null;
@@ -1393,6 +1393,10 @@ if (!function_exists("llxHeader")) {
 
 		if (getDolGlobalString('MAIN_OPTIMIZEFORCOLORBLIND')) {
 			$tmpcsstouse .= ' colorblind-'.strip_tags(getDolGlobalString('MAIN_OPTIMIZEFORCOLORBLIND'));
+		}
+
+		if (GETPOST('dol_openinpopup', 'aZ09')) {
+			$tmpcsstouse .= ' dol_openinpopup';
 		}
 
 		print '<body id="mainbody" class="'.$tmpcsstouse.'">'."\n";

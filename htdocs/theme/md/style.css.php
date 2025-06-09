@@ -2198,7 +2198,7 @@ tr.nobottom td {
 .minheight30 { min-height: 30px; }
 .minheight40 { min-height: 40px; }
 .titlefieldcreate { width: 20%; }
-.titlefield       { /* width: 25%; */ min-width: 150px; width: 25%; }
+.titlefield       { width: 25%; min-width: 150px; }
 .titlefieldmiddle { width: 50%; }
 .titlefieldmax45 { max-width: 45%; min-width: 180px; }
 .imgmaxwidth100 { max-width: 100px; }
@@ -2927,11 +2927,11 @@ img.hideonsmartphone.pictoactionview {
 
 .pictofixedwidth {
 	text-align: start;
-	width: 20px;
+	width: 1.3em;
 	/* padding-right: 0; */
 }
 img.pictofixedwidth {
-	width: 18px;
+	width: 1.2em;
 	padding-right: 2px;
 }
 
@@ -5671,7 +5671,7 @@ div.backgreypublicpayment {
 .poweredbypublicpayment {
 	float: right;
 	top: 8px;
-	right: 8px;
+	right: 12px;
 	position: absolute;
 	font-size: 0.8em;
 	color: #222;
@@ -5760,6 +5760,7 @@ div#card-errors {
 .ui-dialog-titlebar {
 }
 .ui-dialog-content {
+	maring-bottom: 10px;	/* same than .ui-widget-header */
 	font-size: <?php print is_numeric($fontsize) ? $fontsize.'px' : $fontsize; ?> !important;
 }
 .ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.ui-draggable {
@@ -5776,6 +5777,10 @@ div#card-errors {
 
 div#dialogforpopup {
 	background-color: #f8f8f8 !important;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+	padding: .5em 1em .3em .4em;
 }
 
 
@@ -5827,7 +5832,7 @@ div.ui-tooltip {
 }
 
 div.ui-tooltip.mytooltip {
-	padding: 10px 20px;
+	padding: 20px 20px;
 	border-radius: 4px;
 	box-shadow: 0 0 4px #888;
 	margin: 2px;
@@ -8465,12 +8470,13 @@ div.clipboardCPValue.hidewithsize {
 }
 
 #virtualcard-iframe {
-	border: 40px solid #aaa;
+	border: 1px solid #aaa;
 	vertical-align: top;
 	width: 10%;
 	min-width: 100px;
 	border-radius: 10px;
 	aspect-ratio: 0.6;
+	box-shadow: 0 0 5px #bbb;
 }
 .nopointervent {
 	pointer-events: none;

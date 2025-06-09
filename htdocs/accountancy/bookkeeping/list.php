@@ -336,7 +336,7 @@ if (empty($reshook)) {
 		$listofaccountsforgroup2 = array();
 		if (is_array($listofaccountsforgroup)) {
 			foreach ($listofaccountsforgroup as $tmpval) {
-				$listofaccountsforgroup2[] = "'".$db->escape((string) $tmpval['id'])."'";
+				$listofaccountsforgroup2[] = "'".$db->escape((string) $tmpval['account_number'])."'";
 			}
 		}
 		$filter['t.search_accounting_code_in'] = implode(',', $listofaccountsforgroup2);
@@ -909,7 +909,7 @@ if ($massaction == 'preunletteringauto') {
 	$input2 = $formaccounting->select_journal($journal_code, 'code_journal', 0, 0, 1, 1) . '</td>';
 	$formquestion = array(
 		array(
-			'type' => 'date',
+			'type' => 'other',
 			'name' => 'massdate',
 			'label' => '<span class="fieldrequired">' . $langs->trans("Docdate") . '</span>',
 			'value' => $input1
